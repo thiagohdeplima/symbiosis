@@ -1,0 +1,19 @@
+version: "3.4"
+
+networks:
+  application: {}
+
+services:
+  application:
+    networks:
+    - application
+    build:
+      context: "."
+      target: compiler
+    ports:
+    - 4000:4000
+    volumes:
+    - .:/srv/app
+    environment:
+      MIX_ENV: ${MIX_ENV:-dev}
+    command: sh -c "tail -f /dev/null"
