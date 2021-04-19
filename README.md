@@ -1,21 +1,5 @@
 # Symbiosis
 
-**TODO: Add description**
+Symbiosis is in-memory distributed key-value database.
 
-## Installation
-
-If [available in Hex](https://hex.pm/docs/publish), the package can be installed
-by adding `symbiosis` to your list of dependencies in `mix.exs`:
-
-```elixir
-def deps do
-  [
-    {:symbiosis, "~> 0.1.0"}
-  ]
-end
-```
-
-Documentation can be generated with [ExDoc](https://github.com/elixir-lang/ex_doc)
-and published on [HexDocs](https://hexdocs.pm). Once published, the docs can
-be found at [https://hexdocs.pm/symbiosis](https://hexdocs.pm/symbiosis).
-
+Is not created to be a production software, but a Proof of Concept of Distributed Elixir with ETS.
