@@ -7,12 +7,14 @@ defmodule Symbiosis.Application do
 
   def start(_type, _args) do
     children = [
-      
+      {Task.Supervisor, name: Symbiosis.TaskSupervisor},
+
+      Supervisor.child_spec(Symbiosis.child_spec(), restart: :permanent),
     ]
 
-    # See https://hexdocs.pm/elixir/Supervisor.html
-    # for other strategies and supported options
-    opts = [strategy: :one_for_one, name: Symbiosis.Supervisor]
-    Supervisor.start_link(children, opts)
+    Supervisor.start_link(children, [
+      strategy: :one_for_one,
+      name: Symbiosis.Supervisor
+    ])
   end
 end
