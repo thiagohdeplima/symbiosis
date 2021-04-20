@@ -51,34 +51,15 @@ defmodule Symbiosis do
   end
 
   defp recv_data(%__MODULE__{accepting: socket} = settings) do
-    case :gen_tcp.recv(socket, 0) do
-      {:ok, command} ->
-        command
-        |> process_command(settings)
-
+    with {:ok, command} <- :gen_tcp.recv(socket, 0),
+         {:ok, result} <- Symbiosis.Command.run(command)
+    do
+      recv_data(settings)
+    else
       {:error, reason} ->
-        Logger.error("Error receiving data: #{reason}")
-        settings.callback.(settings)
-    end
-  end
+        Logger.info("Error: #{reason}")
 
-  defp process_command("CLOSE\r\n", %__MODULE__{accepting: socket} = settings) do
-    case :gen_tcp.close(socket) do
-      :ok ->
-        accept(settings)
-
-      {:error, reason} ->
-        Logger.error("Error closing connection: #{reason}")
-        accept(settings)
-    end
-  end
-  defp process_command(command, %__MODULE__{accepting: socket} = settings) do
-    case :gen_tcp.send(socket, "Received command #{command}") do
-      :ok ->
-        settings.callback.(settings)
-
-      {:error, reason} ->
-        Logger.error("Error sending response: #{reason}")
+        recv_data(settings)
     end
   end
 end
