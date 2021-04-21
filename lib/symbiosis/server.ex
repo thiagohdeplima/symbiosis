@@ -20,7 +20,7 @@ defmodule Symbiosis.Server do
 
   def start_server() do
     with {:ok, listening} <- :gen_tcp.listen(4000, @opts) do
-      Logger.info("Accepting requests on tcp://0.0.0.0:4000")
+      Logger.info("Starting server at tcp://0.0.0.0:4000")
 
       %__MODULE__{}
       |> Map.put(:listening, listening)
