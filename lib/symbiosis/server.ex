@@ -8,11 +8,6 @@ defmodule Symbiosis.Server do
     active:    false,
     reuseaddr: true
   ]
-
-  defstruct [
-    :listening,
-    :accepting
-  ]
   
   def child_spec() do
     {Task, &start_server/0}
@@ -22,41 +17,37 @@ defmodule Symbiosis.Server do
     with {:ok, listening} <- :gen_tcp.listen(4000, @opts) do
       Logger.info("Starting server at tcp://0.0.0.0:4000")
 
-      %__MODULE__{}
-      |> Map.put(:listening, listening)
-      |> accept()
+      accept(listening)
     else
       {:error, reason} ->
         throw "Error starting server: #{reason}"
     end
   end
 
-  defp accept(%__MODULE__{listening: listening} = settings) do
+  defp accept(listening) do
     with {:ok, accepting} <- :gen_tcp.accept(listening),
-         {:ok, pid} <- receive_request(accepting, settings),
+         {:ok, pid} <- receive_request(accepting),
           :ok <- :gen_tcp.controlling_process(accepting, pid),
           :ok <- log_peer_details(accepting)
     do
-      accept(settings)
+      accept(listening)
     end
   end
 
-  defp receive_request(accepting, settings) do
+  defp receive_request(accepting) do
     Task.Supervisor.start_child(Symbiosis.TaskSupervisor, fn ->
-      settings
-      |> Map.put(:accepting, accepting)
-      |> recv_data()
+      recv_data(accepting)
     end)
   end
 
-  defp recv_data(%__MODULE__{accepting: socket} = settings) do
-    with {:ok, command} <- :gen_tcp.recv(socket, 0),
+  defp recv_data(accepting) do
+    with {:ok, command} <- :gen_tcp.recv(accepting, 0),
          {:ok, _result} <- Symbiosis.Command.run(command)
     do
-      recv_data(settings)
+      recv_data(accepting)
     else
       {:error, _reason} ->
-        :gen_tcp.close(socket)
+        :gen_tcp.close(accepting)
     end
   end
 
