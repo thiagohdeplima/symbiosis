@@ -10,10 +10,10 @@ defmodule Symbiosis.Server do
   ]
   
   def child_spec() do
-    {Task, &start_server/0}
+    {Task, &start/0}
   end
 
-  def start_server() do
+  def start() do
     with {:ok, listening} <- :gen_tcp.listen(4000, @opts) do
       Logger.info("Starting server at tcp://0.0.0.0:4000")
 
