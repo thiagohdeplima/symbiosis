@@ -11,8 +11,7 @@ defmodule Symbiosis do
 
   defstruct [
     :listening,
-    :accepting,
-    :callback
+    :accepting
   ]
   
   def child_spec() do
@@ -25,7 +24,6 @@ defmodule Symbiosis do
 
       %__MODULE__{}
       |> Map.put(:listening, listening)
-      |> Map.put(:callback,  &recv_data/1)
       |> accept()
     else
       {:error, reason} ->
