@@ -9,7 +9,7 @@ defmodule Symbiosis.Application do
     children = [
       {Task.Supervisor, name: Symbiosis.TaskSupervisor},
 
-      Supervisor.child_spec(Symbiosis.child_spec(), restart: :permanent),
+      Supervisor.child_spec(Symbiosis.Server.child_spec(), restart: :permanent),
     ]
 
     Supervisor.start_link(children, [
