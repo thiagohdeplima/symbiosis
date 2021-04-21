@@ -34,7 +34,8 @@ defmodule Symbiosis do
   defp accept(%__MODULE__{listening: listening} = settings) do
     with {:ok, accepting} <- :gen_tcp.accept(listening),
          {:ok, pid} <- receive_request(accepting, settings),
-          :ok <- :gen_tcp.controlling_process(accepting, pid)
+          :ok <- :gen_tcp.controlling_process(accepting, pid),
+          :ok <- log_peer_details(accepting)
     do
       accept(settings)
     end
@@ -56,6 +57,15 @@ defmodule Symbiosis do
     else
       {:error, _reason} ->
         :gen_tcp.close(socket)
+    end
+  end
+
+  defp log_peer_details(socket) do
+    with {:ok, {host, port}} <- :inet.peername(socket),
+         host when is_list(host) <- Tuple.to_list(host),
+         host when is_binary(host) <- Enum.join(host, ".")
+    do
+      Logger.info("Connected with host #{host}:#{port}")
     end
   end
 end
