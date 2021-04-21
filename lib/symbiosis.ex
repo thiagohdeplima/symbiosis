@@ -50,11 +50,11 @@ defmodule Symbiosis do
 
   defp recv_data(%__MODULE__{accepting: socket} = settings) do
     with {:ok, command} <- :gen_tcp.recv(socket, 0),
-         {:ok, result} <- Symbiosis.Command.run(command)
+         {:ok, _result} <- Symbiosis.Command.run(command)
     do
       recv_data(settings)
     else
-      {:error, reason} ->
+      {:error, _reason} ->
         :gen_tcp.close(socket)
     end
   end
