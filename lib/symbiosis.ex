@@ -36,7 +36,7 @@ defmodule Symbiosis do
   defp accept(%__MODULE__{listening: listening} = settings) do
     with {:ok, accepting} <- :gen_tcp.accept(listening),
          {:ok, pid} <- receive_request(accepting, settings),
-         {:ok, _} <- :gen_tcp.controlling_process(accepting, pid)
+          :ok <- :gen_tcp.controlling_process(accepting, pid)
     do
       accept(settings)
     end
