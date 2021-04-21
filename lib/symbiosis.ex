@@ -57,9 +57,7 @@ defmodule Symbiosis do
       recv_data(settings)
     else
       {:error, reason} ->
-        Logger.info("Error: #{reason}")
-
-        recv_data(settings)
+        :gen_tcp.close(socket)
     end
   end
 end
