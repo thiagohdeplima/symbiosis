@@ -35,7 +35,8 @@ defmodule Symbiosis.Server do
   end
 
   defp receive_request(accepting) do
-    Task.Supervisor.start_child(Symbiosis.TaskSupervisor, fn ->
+    Symbiosis.TaskSupervisor
+    |> Task.Supervisor.start_child(fn ->
       recv_data(accepting)
     end)
   end
@@ -52,11 +53,11 @@ defmodule Symbiosis.Server do
   end
 
   defp log_peer_details(socket) do
-    with {:ok, {host, port}} <- :inet.peername(socket),
-         host when is_list(host) <- Tuple.to_list(host),
-         host when is_binary(host) <- Enum.join(host, ".")
+    with {:ok, {client_ip, client_port}} <- :inet.peername(socket),
+         client_ip when is_list(client_ip) <- Tuple.to_list(client_ip),
+         client_ip when is_binary(client_ip) <- Enum.join(client_ip, ".")
     do
-      Logger.info("Connected with host #{host}:#{port}")
+      Logger.info("Connected with client_ip #{client_ip}:#{client_port}")
     end
   end
 end
