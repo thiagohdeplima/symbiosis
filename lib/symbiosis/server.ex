@@ -67,7 +67,7 @@ defmodule Symbiosis.Server do
          client_ip when is_list(client_ip) <- Tuple.to_list(client_ip),
          client_ip when is_binary(client_ip) <- Enum.join(client_ip, ".")
     do
-      Logger.info("Connected with client_ip #{client_ip}:#{client_port}")
+      Logger.info("Received connection from #{client_ip}:#{client_port}")
     end
   end
 end
