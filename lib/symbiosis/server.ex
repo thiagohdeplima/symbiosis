@@ -13,9 +13,19 @@ defmodule Symbiosis.Server do
     {Task, &start/0}
   end
 
+  def listen_port() do
+    case System.fetch_env("PORT") do
+      :error ->
+        4000
+
+      {:ok, port} ->
+        String.to_integer(port)
+    end
+  end
+
   def start() do
-    with {:ok, listening} <- :gen_tcp.listen(4000, @opts) do
-      Logger.info("Starting server at tcp://0.0.0.0:4000")
+    with {:ok, listening} <- :gen_tcp.listen(listen_port(), @opts) do
+      Logger.info("Starting server at tcp://0.0.0.0:#{listen_port()}")
 
       accept(listening)
     else
