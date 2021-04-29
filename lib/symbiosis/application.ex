@@ -7,6 +7,8 @@ defmodule Symbiosis.Application do
 
   def start(_type, _args) do
     children = [
+      {Symbiosis.DataWriter, []},
+
       {Task.Supervisor, name: Symbiosis.TaskSupervisor},
 
       Supervisor.child_spec(Symbiosis.Server.child_spec(), restart: :permanent),
