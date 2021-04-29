@@ -57,6 +57,10 @@ defmodule Symbiosis.Server do
     do
       recv_data(accepting)
     else
+      {:error, :invalid_command} ->
+        :gen_tcp.send(accepting, "ERROR: Invalid command\r\n")
+        recv_data(accepting)
+
       {:error, _reason} ->
         :gen_tcp.close(accepting)
     end
