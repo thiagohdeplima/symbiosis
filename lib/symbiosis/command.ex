@@ -6,10 +6,17 @@ defmodule Symbiosis.Command do
     value: :undefined,
   ]
 
+  @type t :: %__MODULE__{
+    key:   String.t(),
+    value: String.t() | :undefined,
+
+    operation: String.t(),
+  }
+
   def run(command) do
     case parse(command) do
-      {:ok, %__MODULE__{}} ->
-        {:ok, command}
+      {:ok, command = %__MODULE__{}} ->
+        GenServer.call(Symbiosis.DataHandler, command)
 
       {:error, reason} ->
         {:error, reason}
