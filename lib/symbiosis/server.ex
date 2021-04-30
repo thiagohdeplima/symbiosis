@@ -53,8 +53,9 @@ defmodule Symbiosis.Server do
 
   defp recv_data(accepting) do
     with {:ok, command} <- :gen_tcp.recv(accepting, 0),
-         {:ok, _result} <- Symbiosis.Command.run(command)
+         {:ok, result} <- Symbiosis.Command.run(command)
     do
+      :gen_tcp.send(accepting, "OK: #{result}\r\n")
       recv_data(accepting)
     else
       {:error, :invalid_command} ->
