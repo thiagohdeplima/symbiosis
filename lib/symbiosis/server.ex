@@ -62,6 +62,10 @@ defmodule Symbiosis.Server do
         :gen_tcp.send(accepting, "ERROR: Invalid command\r\n")
         recv_data(accepting)
 
+        {:error, :not_found} ->
+          :gen_tcp.send(accepting, "ERROR: key not found\r\n")
+          recv_data(accepting)
+
       {:error, _reason} ->
         :gen_tcp.close(accepting)
     end
