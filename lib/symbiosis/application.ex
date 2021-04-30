@@ -7,7 +7,7 @@ defmodule Symbiosis.Application do
 
   def start(_type, _args) do
     children = [
-      {Symbiosis.DataWriter, []},
+      {Symbiosis.DataHandler, []},
 
       {Task.Supervisor, name: Symbiosis.TaskSupervisor},
 
