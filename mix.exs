@@ -22,7 +22,8 @@ defmodule Symbiosis.MixProject do
   # Run "mix help deps" to learn about dependencies.
   defp deps do
     [
-      {:peerage, "~> 1.0.2"}
+      {:peerage, "~> 1.0.2"},
+      {:stream_data, "~> 0.5", only: :test}
     ]
   end
 end
