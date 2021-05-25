@@ -23,7 +23,10 @@ defmodule Symbiosis.MixProject do
   defp deps do
     [
       {:peerage, "~> 1.0.2"},
-      {:stream_data, "~> 0.5", only: :test}
+
+      # Only dev and test libraries
+      {:stream_data, "~> 0.5", only: :test},
+      {:ex_doc, "~> 0.24", only: :dev, runtime: false},
     ]
   end
 end
