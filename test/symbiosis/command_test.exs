@@ -12,12 +12,7 @@ defmodule Symbiosis.CommandTest do
         Command.parse("INVALID COMMAND")
     end
 
-    test "when command is valid SET should return it" do
-      assert {:ok, %Command{operation: "SET", key: "key", value: "val"}} =
-        Command.parse("SET key val")
-    end
-
-    property "should return SET to correct key and value" do
+    property "must return %Command{} when key and value are valid" do
       check all key <- StreamData.string(:alphanumeric, min_length: 1),
                 val <- StreamData.string(:alphanumeric, min_length: 1)
       do
