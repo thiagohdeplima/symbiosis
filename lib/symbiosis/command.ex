@@ -24,7 +24,7 @@ defmodule Symbiosis.Command do
   end
 
   @spec parse(String.t) :: __MODULE__.t()
-  defp parse("SET" <> _ = command) do
+  def parse("SET" <> _ = command) do
     ~r/^(?<operation>SET)\s(?<key>\w+)\s(?<value>\w+)$/
     |> Regex.named_captures(command)
     |> case do
@@ -34,7 +34,7 @@ defmodule Symbiosis.Command do
         {:ok, %__MODULE__{operation: operation, key: key, value: value}}
     end
   end
-  defp parse(command) do
+  def parse(command) do
     ~r/^(?<operation>GET|DELETE)\s(?<key>\w+)$/
     |> Regex.named_captures(command)
     |> case do
