@@ -44,4 +44,18 @@ defmodule Symbiosis.CommandTest do
       end
     end
   end
+
+  describe "parse/1 DELETE command" do
+    test "when key is empty must return an error" do
+      assert {:error, :invalid_command} = Command.parse("DELETE")
+      assert {:error, :invalid_command} = Command.parse("DELETE ")
+    end
+
+    property "when key is valid must return an %Command{}" do
+      check all key <- StreamData.string(:alphanumeric, min_length: 1) do
+        assert {:ok, %Command{operation: "DELETE", key: ^key, value: :undefined}} =
+          Command.parse("DELETE #{key}")
+      end
+    end
+  end
 end
