@@ -6,17 +6,24 @@ defmodule Symbiosis.CommandTest do
 
   alias Symbiosis.Command
 
-  describe "parse/1" do
-    test "when command is invalid should return error" do
-      assert {:error, :invalid_command} =
-        Command.parse("INVALID COMMAND")
+  describe "parse/1 SET command" do
+    property "when command is invalid must return an error" do
+      check all cmd <- StreamData.string(:alphanumeric, min_length: 1) do
+        assert {:error, :invalid_command} = Command.parse(cmd)
+      end
     end
 
-    property "must return %Command{} when key and value are valid" do
+    property "when value is empty must return an error for any key" do
+      check all key <- StreamData.string(:alphanumeric, min_length: 1) do
+        assert {:error, :invalid_command} = Command.parse("SET #{key}")
+      end
+    end
+
+    property "when key and value are valid must return an %Command{}" do
       check all key <- StreamData.string(:alphanumeric, min_length: 1),
                 val <- StreamData.string(:alphanumeric, min_length: 1)
       do
-        assert {:ok, %Command{operation: "SET", key: key, value: val}} =
+        assert {:ok, %Command{operation: "SET", key: ^key, value: ^val}} =
           Command.parse("SET #{key} #{val}")
       end
     end
