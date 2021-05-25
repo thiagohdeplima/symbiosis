@@ -25,7 +25,7 @@ defmodule Symbiosis.CommandTest do
       check all key <- StreamData.string(:alphanumeric, min_length: 1),
                 val <- StreamData.string(:alphanumeric, min_length: 1)
       do
-        assert {:ok, %Command{operation: "SET", key: ^key, value: ^val}} =
+        assert {:ok, %Command{operation: :set, key: ^key, value: ^val}} =
           Command.parse("SET #{key} #{val}")
       end
     end
@@ -39,7 +39,7 @@ defmodule Symbiosis.CommandTest do
 
     property "when key is valid must return an %Command{}" do
       check all key <- StreamData.string(:alphanumeric, min_length: 1) do
-        assert {:ok, %Command{operation: "GET", key: ^key, value: :undefined}} =
+        assert {:ok, %Command{operation: :get, key: ^key, value: :undefined}} =
           Command.parse("GET #{key}")
       end
     end
@@ -53,7 +53,7 @@ defmodule Symbiosis.CommandTest do
 
     property "when key is valid must return an %Command{}" do
       check all key <- StreamData.string(:alphanumeric, min_length: 1) do
-        assert {:ok, %Command{operation: "DELETE", key: ^key, value: :undefined}} =
+        assert {:ok, %Command{operation: :delete, key: ^key, value: :undefined}} =
           Command.parse("DELETE #{key}")
       end
     end

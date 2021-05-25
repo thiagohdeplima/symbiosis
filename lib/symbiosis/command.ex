@@ -6,11 +6,13 @@ defmodule Symbiosis.Command do
     value: :undefined,
   ]
 
+  @type operation :: :set | :get | :delete
+
   @type t :: %__MODULE__{
     key:   String.t(),
     value: String.t() | :undefined,
 
-    operation: String.t(),
+    operation: operation
   }
 
   def run(command) do
@@ -30,8 +32,8 @@ defmodule Symbiosis.Command do
     |> case do
       nil -> {:error, :invalid_command}
 
-      %{"operation" => operation, "key" => key, "value" => value} ->
-        {:ok, %__MODULE__{operation: operation, key: key, value: value}}
+      %{"key" => key, "value" => value} ->
+        {:ok, %__MODULE__{operation: :set, key: key, value: value}}
     end
   end
   def parse(command) do
@@ -40,8 +42,11 @@ defmodule Symbiosis.Command do
     |> case do
       nil -> {:error, :invalid_command}
 
-      %{"operation" => operation, "key" => key} ->
-        {:ok, %__MODULE__{operation: operation, key: key}}
+      %{"operation" => "GET", "key" => key} ->
+        {:ok, %__MODULE__{operation: :get, key: key}}
+
+      %{"operation" => "DELETE", "key" => key} ->
+        {:ok, %__MODULE__{operation: :delete, key: key}}
     end
   end
 end
