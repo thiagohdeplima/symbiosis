@@ -1,4 +1,4 @@
-FROM elixir:1.10-alpine AS compiler
+FROM elixir:1.11-alpine AS compiler
 
 ARG MIX_ENV=prod
 ENV MIX_ENV=${MIX_ENV}
