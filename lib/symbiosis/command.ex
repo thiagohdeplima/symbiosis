@@ -1,4 +1,9 @@
 defmodule Symbiosis.Command do
+  @moduledoc """
+  Module for handle and parse
+  command strings
+  """
+
   defstruct [
     :key,
     :operation,
@@ -15,17 +20,18 @@ defmodule Symbiosis.Command do
     operation: operation
   }
 
-  def run(command) do
-    case parse(command) do
-      {:ok, command = %__MODULE__{}} ->
-        GenServer.call(Symbiosis.DataHandler, command)
+  @doc """
+  Transform a command's string to `Symbiosis.Command` struct
 
-      {:error, reason} ->
-        {:error, reason}
-    end
-  end
+  ### Examples
 
-  @spec parse(String.t) :: __MODULE__.t()
+      iex> Symbiosis.Command.parse("GET key")
+      {:ok, %Symbiosis.Command{operation: :get, key: "key", value: :undefined}}
+
+      iex> Symbiosis.Command.parse("INVALID COMMAND")
+      {:error, :invalid_command}
+  """
+  @spec parse(String.t) :: {:ok, __MODULE__.t()} | {:error, any}
   def parse("SET" <> _ = command) do
     ~r/^(?<operation>SET)\s(?<key>\w+)\s(?<value>\w+)$/
     |> Regex.named_captures(command)
